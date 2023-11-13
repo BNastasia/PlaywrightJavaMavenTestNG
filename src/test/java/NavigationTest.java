@@ -1,3 +1,6 @@
+import com.beust.ah.A;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,5 +31,38 @@ public class NavigationTest extends BaseTest {
 
         Assert.assertEquals(womenUrl,expectedUrl);
         Assert.assertEquals(womenTitle, expectedTitle);
+    }
+
+    @Test
+    public void testNavigateToHomePage() {
+        getPage().getByRole(AriaRole.MENUITEM, new Page.GetByRoleOptions().setName("Sale")).click();
+        Assert.assertEquals(getPage().title(),"Sale");
+
+        getPage().getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Home")).click();
+        Assert.assertEquals(getPage().title(), "Home Page");
+    }
+
+    @Test
+    public void testNavigateBackAndForward() {
+        getPage().getByRole(AriaRole.MENUITEM, new Page.GetByRoleOptions().setName("\uE622 Men")).click();
+        Assert.assertEquals(getPage().title(), "Men");
+        Assert.assertEquals(getPage().url(), "https://magento.softwaretestingboard.com/men.html");
+
+        getPage().goBack();
+        Assert.assertEquals(getPage().title(), "Home Page");
+        Assert.assertEquals(getPage().url(), "https://magento.softwaretestingboard.com/");
+
+        getPage().goForward();
+        Assert.assertEquals(getPage().title(), "Men");
+        Assert.assertEquals(getPage().url(), "https://magento.softwaretestingboard.com/men.html");
+    }
+
+    @Test
+    public void testNavigateToHomeByLogo() {
+        getPage().getByRole(AriaRole.MENUITEM, new Page.GetByRoleOptions().setName("What's New")).click();
+        Assert.assertEquals(getPage().title(), "What's New");
+
+        getPage().getByLabel("store logo").click();
+        Assert.assertEquals(getPage().title(), "Home Page");
     }
 }
